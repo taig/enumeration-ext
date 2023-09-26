@@ -1,6 +1,6 @@
 val Version = new {
   val Cats = "2.10.0"
-  val Circe = "0.14.5"
+  val Circe = "0.14.6"
   val Munit = "0.7.29"
   val Scala = "3.3.0"
   val Skunk = "0.6.0"
