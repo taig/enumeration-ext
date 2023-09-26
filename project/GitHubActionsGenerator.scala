@@ -15,7 +15,7 @@ object GitHubActionsGenerator {
 
     val Checkout: Json = Json.obj(
       "name" := "Checkout",
-      "uses" := "actions/checkout@v2"
+      "uses" := "actions/checkout@v4"
     )
   }
 
