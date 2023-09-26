@@ -1,11 +1,9 @@
 package io.taig.enumeration.ext
 
 import cats.{Hash, Show}
-import cats.syntax.all.*
 import io.circe.{Codec, Decoder, Encoder}
 
 trait circe:
-
   implicit def decodeMapping[A, B](using mapping: Mapping[A, B], decoder: Decoder[B])(using Show[B]): Decoder[A] =
     decoder.emap: b =>
       mapping

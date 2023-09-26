@@ -43,7 +43,6 @@ lazy val core = crossProject(JVMPlatform, JSPlatform)
       "-source:future" ::
         "-rewrite" ::
         "-new-syntax" ::
-        "-Wvalue-discard" ::
         "-Wunused:all" ::
         Nil,
     libraryDependencies ++=
