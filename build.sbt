@@ -3,7 +3,6 @@ val Version = new {
   val Circe = "0.14.6"
   val Munit = "0.7.29"
   val Scala = "3.3.1"
-  val Skunk = "0.6.0"
 }
 
 inThisBuild(
@@ -32,7 +31,7 @@ lazy val root = project
     },
     name := "enumeration-ext"
   )
-  .aggregate(core.jvm, core.js, circe.jvm, circe.js, skunk)
+  .aggregate(core.jvm, core.js, circe.jvm, circe.js)
 
 lazy val core = crossProject(JVMPlatform, JSPlatform)
   .crossType(CrossType.Pure)
@@ -63,13 +62,3 @@ lazy val circe = crossProject(JVMPlatform, JSPlatform)
     name := "enumeration-ext-circe"
   )
   .dependsOn(core % "compile->compile;test->test")
-
-lazy val skunk = project
-  .in(file("modules/skunk"))
-  .settings(
-    libraryDependencies ++=
-      "org.tpolecat" %% "skunk-core" % Version.Skunk ::
-        Nil,
-    name := "enumeration-ext-skunk"
-  )
-  .dependsOn(core.jvm)
