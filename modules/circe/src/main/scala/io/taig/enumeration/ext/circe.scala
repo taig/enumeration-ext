@@ -4,7 +4,7 @@ import cats.{Hash, Show}
 import io.circe.{Codec, Decoder, Encoder}
 
 trait circe:
-  implicit def decodeMapping[A, B](using mapping: Mapping[A, B], decoder: Decoder[B])(using Show[B]): Decoder[A] =
+  given decodeMapping[A, B](using mapping: Mapping[A, B], decoder: Decoder[B])(using Show[B]): Decoder[A] =
     decoder.emap: b =>
       mapping
         .prj(b)
@@ -15,7 +15,7 @@ trait circe:
   )(using EnumerationValues.Aux[A, A])(using decoder: Decoder[B]): Decoder[A] =
     decodeMapping(using Mapping.enumeration(f), decoder)
 
-  implicit def encodeMapping[A, B](using mapping: Mapping[A, B], encoder: Encoder[B]): Encoder[A] =
+  given encodeMapping[A, B](using mapping: Mapping[A, B], encoder: Encoder[B]): Encoder[A] =
     encoder.contramap(mapping.inj)
 
   def encoderEnumeration[A, B: Hash](

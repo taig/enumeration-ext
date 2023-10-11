@@ -1,5 +1,6 @@
 package io.taig.enumeration.ext
 
+import io.taig.enumeration.ext.circe.given
 import io.taig.enumeration.ext.circe.*
 import io.circe.{Decoder, DecodingFailure, Encoder, Json}
 import munit.FunSuite
