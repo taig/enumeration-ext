@@ -1,6 +1,7 @@
 val Version = new {
   val Cats = "2.10.0"
   val Circe = "0.14.6"
+  val Ciris = "3.5.0"
   val Munit = "0.7.29"
   val Scala = "3.3.3"
 }
@@ -18,7 +19,7 @@ inThisBuild(
   )
 )
 
-lazy val root = project
+lazy val root = crossProject(JVMPlatform)
   .in(file("."))
   .enablePlugins(BlowoutYamlPlugin)
   .settings(noPublishSettings)
@@ -31,7 +32,7 @@ lazy val root = project
     },
     name := "enumeration-ext"
   )
-  .aggregate(core.jvm, core.js, circe.jvm, circe.js)
+  .aggregate(core, circe, ciris)
 
 lazy val core = crossProject(JVMPlatform, JSPlatform)
   .crossType(CrossType.Pure)
@@ -60,5 +61,17 @@ lazy val circe = crossProject(JVMPlatform, JSPlatform)
       "io.circe" %%% "circe-core" % Version.Circe ::
         Nil,
     name := "enumeration-ext-circe"
+  )
+  .dependsOn(core % "compile->compile;test->test")
+
+lazy val ciris = crossProject(JVMPlatform, JSPlatform)
+  .crossType(CrossType.Pure)
+  .withoutSuffixFor(JVMPlatform)
+  .in(file("modules/ciris"))
+  .settings(
+    libraryDependencies ++=
+      "is.cir" %% "ciris" % Version.Ciris ::
+        Nil,
+    name := "enumeration-ext-ciris"
   )
   .dependsOn(core % "compile->compile;test->test")
