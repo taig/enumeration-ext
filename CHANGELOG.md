@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.1.0
+
+_2024-07-05_
+
+- Sealed Mapping
+- Migrate to NonEmptyList representation
+- Upgrade to actions/setup-java@v4
+- Upgrade to cats 2.12.0
+- Upgrade to circe 0.14.9
+- Upgrade to ciris 3.6.0
+- Upgrade to munit 1.0.0
+- Upgrade to sbt-houserules 0.7.7
+- Upgrade to sbt-scalajs 1.16.0
+
 ## 0.0.4
 
 _2024-03-14_
