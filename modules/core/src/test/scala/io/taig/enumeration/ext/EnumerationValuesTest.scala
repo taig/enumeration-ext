@@ -1,6 +1,7 @@
 package io.taig.enumeration.ext
 
 import munit.FunSuite
+import cats.data.NonEmptyList
 
 final class EnumerationValuesTest extends FunSuite:
   test("enum"):
@@ -9,7 +10,7 @@ final class EnumerationValuesTest extends FunSuite:
       case Cat
       case Dog
 
-    assertEquals(obtained = valuesOf[Animal], expected = List(Animal.Bird, Animal.Cat, Animal.Dog))
+    assertEquals(obtained = valuesOf[Animal], expected = NonEmptyList.of(Animal.Bird, Animal.Cat, Animal.Dog))
 
   test("sealed trait"):
     sealed trait Animal extends Product with Serializable
@@ -18,7 +19,7 @@ final class EnumerationValuesTest extends FunSuite:
       case object Cat extends Animal
       case object Dog extends Animal
 
-    assertEquals(obtained = valuesOf[Animal], expected = List(Animal.Bird, Animal.Cat, Animal.Dog))
+    assertEquals(obtained = valuesOf[Animal], expected = NonEmptyList.of(Animal.Bird, Animal.Cat, Animal.Dog))
 
   test("sealed abstract class"):
     sealed abstract class Animal extends Product with Serializable
@@ -27,7 +28,7 @@ final class EnumerationValuesTest extends FunSuite:
       case object Cat extends Animal
       case object Dog extends Animal
 
-    assertEquals(obtained = valuesOf[Animal], expected = List(Animal.Bird, Animal.Cat, Animal.Dog))
+    assertEquals(obtained = valuesOf[Animal], expected = NonEmptyList.of(Animal.Bird, Animal.Cat, Animal.Dog))
 
   test("nested"):
     sealed abstract class Foobar
@@ -45,5 +46,5 @@ final class EnumerationValuesTest extends FunSuite:
 
     assertEquals(
       obtained = valuesOf[Foobar],
-      expected = List(Foobar.Foo.A, Foobar.Foo.B, Foobar.Foo.C, Foobar.Bar.X, Foobar.Bar.Y, Foobar.Bar.Z)
+      expected = NonEmptyList.of(Foobar.Foo.A, Foobar.Foo.B, Foobar.Foo.C, Foobar.Bar.X, Foobar.Bar.Y, Foobar.Bar.Z)
     )
