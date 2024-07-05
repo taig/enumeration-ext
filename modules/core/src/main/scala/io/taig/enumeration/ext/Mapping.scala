@@ -6,7 +6,7 @@ import cats.syntax.all.*
 import scala.annotation.targetName
 import scala.collection.immutable.IntMap
 
-abstract class Mapping[A, B] extends Inject[A, B]:
+sealed abstract class Mapping[A, B] extends Inject[A, B]:
   def values: List[A]
 
 object Mapping:
