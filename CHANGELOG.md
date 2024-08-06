@@ -4,8 +4,8 @@
 
 _2024-08-06_
 
- * Change Mapping.values from List to NonEmptyList
- * Upgrade to sbt 1.10.1
+- Change Mapping.values from List to NonEmptyList
+- Upgrade to sbt 1.10.1
 
 ## 0.1.0
 
