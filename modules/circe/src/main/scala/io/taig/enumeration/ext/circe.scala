@@ -1,15 +1,18 @@
 package io.taig.enumeration.ext
 
+import cats.Order
 import cats.Show
+import cats.syntax.all.*
 import io.circe.{Codec, Decoder, Encoder}
-import cats.kernel.Order
 
 trait circe:
   given decodeMapping[A, B](using mapping: Mapping[A, B], decoder: Decoder[B])(using Show[B]): Decoder[A] =
     decoder.emap: b =>
       mapping
         .prj(b)
-        .toRight(s"Couldn't decode value '$b.' Allowed values: '${mapping.values.map(mapping.inj).mkString(",")}'")
+        .toRight(
+          s"Couldn't decode value '$b.' Allowed values: '${mapping.values.map(mapping.inj).map(_.show).mkString_(",")}'"
+        )
 
   def decoderEnumeration[A, B: Order: Show](
       f: A => B
