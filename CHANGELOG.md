@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.2.0
+
+_2024-08-06_
+
+ * Change Mapping.values from List to NonEmptyList
+ * Upgrade to sbt 1.10.1
+
 ## 0.1.0
 
 _2024-07-05_
