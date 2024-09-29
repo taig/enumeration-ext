@@ -3,7 +3,9 @@ package io.taig.enumeration.ext
 import cats.Order
 import cats.Show
 import cats.syntax.all.*
-import io.circe.{Codec, Decoder, Encoder}
+import io.circe.Codec
+import io.circe.Decoder
+import io.circe.Encoder
 
 trait circe:
   given decodeMapping[A, B](using mapping: Mapping[A, B], decoder: Decoder[B])(using Show[B]): Decoder[A] =

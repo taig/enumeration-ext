@@ -1,7 +1,7 @@
 package io.taig.enumeration.ext
 
-import munit.FunSuite
 import cats.data.NonEmptyList
+import munit.FunSuite
 
 final class EnumerationValuesTest extends FunSuite:
   test("enum"):

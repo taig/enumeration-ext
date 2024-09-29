@@ -1,7 +1,8 @@
 package io.taig.enumeration.ext
 
-import scala.deriving.Mirror
 import cats.data.NonEmptyList
+
+import scala.deriving.Mirror
 
 /** Derive all singelton values of a (nested) enumeration which may consist of Scala 3's `enum` or sealed traits and
   * classes

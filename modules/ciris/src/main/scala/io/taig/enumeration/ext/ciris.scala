@@ -1,9 +1,9 @@
 package io.taig.enumeration.ext
 
-import cats.syntax.all.*
-import cats.Show
 import _root_.ciris.ConfigDecoder
+import cats.Show
 import cats.kernel.Order
+import cats.syntax.all.*
 
 trait ciris:
   given conficDecoder[A, B, C: Show](using mapping: Mapping[B, C], decoder: ConfigDecoder[A, C]): ConfigDecoder[A, B] =

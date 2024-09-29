@@ -1,12 +1,13 @@
 package io.taig.enumeration.ext
 
-import cats.{Eq, Inject}
-import cats.syntax.all.*
-import cats.data.NonEmptyMap
-
-import scala.annotation.targetName
+import cats.Eq
+import cats.Inject
 import cats.Order
 import cats.data.NonEmptyList
+import cats.data.NonEmptyMap
+import cats.syntax.all.*
+
+import scala.annotation.targetName
 
 sealed abstract class Mapping[A, B] extends Inject[A, B]:
   def values: NonEmptyList[A]

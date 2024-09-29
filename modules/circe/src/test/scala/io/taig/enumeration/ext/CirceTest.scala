@@ -1,8 +1,11 @@
 package io.taig.enumeration.ext
 
-import io.taig.enumeration.ext.circe.given
+import io.circe.Decoder
+import io.circe.DecodingFailure
+import io.circe.Encoder
+import io.circe.Json
 import io.taig.enumeration.ext.circe.*
-import io.circe.{Decoder, DecodingFailure, Encoder, Json}
+import io.taig.enumeration.ext.circe.given
 import munit.FunSuite
 
 final class CirceTest extends FunSuite:
