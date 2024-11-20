@@ -12,6 +12,11 @@ import scala.annotation.targetName
 sealed abstract class Mapping[A, B] extends Inject[A, B]:
   def values: NonEmptyList[A]
 
+  final def product[C](mapping: Mapping[C, B])(
+      merge: (B, B) => B,
+      split: B => Option[(B, B)]
+  ): Mapping[(A, C), B] = Mapping.product(this, mapping)(merge, split)
+
 object Mapping:
   inline def apply[A, B](using mapping: Mapping[A, B]): Mapping[A, B] = mapping
 
@@ -29,6 +34,14 @@ object Mapping:
     override def values: NonEmptyList[A] = NonEmptyList.one(a)
     override def inj: A => B = identity
     override def prj: B => Option[A] = b => Option.when(b === a)(a)
+
+  def product[A, B, C](left: Mapping[A, C], right: Mapping[B, C])(
+      merge: (C, C) => C,
+      split: C => Option[(C, C)]
+  ): Mapping[(A, B), C] = new Mapping[(A, B), C]:
+    override val values: NonEmptyList[(A, B)] = left.values.flatMap(a => right.values.map(b => (a, b)))
+    override def inj: ((A, B)) => C = { case (a, b) => merge(left.inj(a), right.inj(b)) }
+    override def prj: C => Option[(A, B)] = c => split(c).flatMap { case (a, b) => (left.prj(a), right.prj(b)).tupled }
 
   @targetName("constantOf")
   def constant[A: Eq](value: A & Singleton): Mapping[value.type, A] = constant[value.type, A]
