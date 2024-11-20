@@ -20,7 +20,6 @@ object EnumerationValues:
 
   def apply[A, B](values: NonEmptyList[B]): EnumerationValues.Aux[A, B] = new EnumerationValues[A]:
     override type Out = B
-
     override def toNonEmptyList: NonEmptyList[Out] = values
 
   inline given [A](using

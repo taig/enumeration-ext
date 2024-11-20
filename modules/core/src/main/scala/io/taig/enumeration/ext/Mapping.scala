@@ -46,7 +46,7 @@ object Mapping:
       merge: (C, C) => C,
       split: C => Option[(C, C)]
   ): Mapping[(A, B), C] = new Mapping[(A, B), C]:
-    override val values: NonEmptyList[(A, B)] = left.values.flatMap(a => right.values.map(b => (a, b)))
+    override val values: NonEmptyList[(A, B)] = left.values.flatMap(right.values.tupleLeft)
     override def inj: ((A, B)) => C = { case (a, b) => merge(left.inj(a), right.inj(b)) }
     override def prj: C => Option[(A, B)] = c => split(c).flatMap { case (a, b) => (left.prj(a), right.prj(b)).tupled }
 
