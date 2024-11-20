@@ -3,7 +3,7 @@ val Version = new {
   val Circe = "0.14.10"
   val Ciris = "3.6.0"
   val Munit = "1.0.2"
-  val Scala = "3.3.3"
+  val Scala = "3.3.4"
 }
 
 inThisBuild(
@@ -27,7 +27,8 @@ lazy val root = crossProject(JVMPlatform)
     blowoutGenerators ++= {
       val workflows = file(".github") / "workflows"
       BlowoutYamlGenerator.lzy(workflows / "main.yml", GitHubActionsGenerator.main) ::
-        BlowoutYamlGenerator.lzy(workflows / "branches.yml", GitHubActionsGenerator.branches) ::
+        BlowoutYamlGenerator.lzy(workflows / "pull-request.yml", GitHubActionsGenerator.pullRequest) ::
+        BlowoutYamlGenerator.lzy(workflows / "taig.yml", GitHubActionsGenerator.tag) ::
         Nil
     },
     name := "enumeration-ext"
