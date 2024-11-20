@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.3.0
+
+_2024-11-20_
+
+ * Add `Mapping.imap`
+ * Add `Mapping.product`
+ * Upgrade to circe 0.14.10
+ * Upgrade to munit 1.0.2
+ * Upgrade to sbt 1.10.5
+ * Upgrade to sbt-ci-release 1.9.0
+ * Upgrade to sbt-houserules 0.9.0
+ * Upgrade to sbt-scalajs 1.17.0
+
 ## 0.2.0
 
 _2024-08-06_
