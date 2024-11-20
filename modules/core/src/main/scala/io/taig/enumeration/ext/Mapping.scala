@@ -10,7 +10,14 @@ import cats.syntax.all.*
 import scala.annotation.targetName
 
 sealed abstract class Mapping[A, B] extends Inject[A, B]:
+  self =>
+
   def values: NonEmptyList[A]
+
+  final def imap[T](f: A => T)(g: T => A): Mapping[T, B] = new Mapping[T, B]:
+    override def values: NonEmptyList[T] = self.values.map(f)
+    override def inj: T => B = g.andThen(self.inj)
+    override def prj: B => Option[T] = self.prj(_).map(f)
 
   final def product[C](mapping: Mapping[C, B])(
       merge: (B, B) => B,
