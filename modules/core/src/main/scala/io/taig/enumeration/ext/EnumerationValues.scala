@@ -1,5 +1,4 @@
 package io.taig.enumeration.ext
-
 import cats.data.NonEmptyList
 
 import scala.deriving.Mirror
@@ -22,27 +21,37 @@ object EnumerationValues:
     override type Out = B
     override def toNonEmptyList: NonEmptyList[Out] = values
 
-  inline given [A](using
-      mirror: Mirror.SumOf[A],
-      values: EnumerationValues.Aux[mirror.MirroredElemTypes, A]
+  inline given sum[A, B <: Tuple](using
+      mirror: Mirror.SumOf[A] { type MirroredElemTypes = B },
+      values: EnumerationValues.Aux[B, A]
   ): EnumerationValues.Aux[A, A] = EnumerationValues(values = values.toNonEmptyList)
 
-  inline given singleton[A <: Singleton, B <: Tuple, C >: A](using
-      values: EnumerationValues.Aux[B, C]
-  ): EnumerationValues.Aux[A *: B, C] = EnumerationValues(values = valueOf[A] :: values.toNonEmptyList)
+  inline given product[A](using
+      mirror: Mirror.ProductOf[A],
+      values: EnumerationValues.Aux[mirror.MirroredElemTypes, mirror.MirroredElemTypes]
+  ): EnumerationValues.Aux[A, A] = EnumerationValues(values = values.toNonEmptyList.map(mirror.fromTuple))
 
-  inline given nested[A, B <: Tuple, C >: A](using
-      mirror: Mirror.SumOf[A],
-      head: EnumerationValues.Aux[mirror.MirroredElemTypes, C],
+  inline given sum1[A, B >: A](using values: EnumerationValues.Aux[A, A]): EnumerationValues.Aux[A *: EmptyTuple, B] =
+    EnumerationValues(values = values.toNonEmptyList)
+
+  inline given sumN[A, B <: Tuple, C >: A](using
+      head: EnumerationValues.Aux[A, A],
       tail: EnumerationValues.Aux[B, C]
-  ): EnumerationValues.Aux[A *: B, C] = EnumerationValues(values = head.toNonEmptyList.concatNel(tail.toNonEmptyList))
+  ): EnumerationValues.Aux[A *: B, C] =
+    EnumerationValues(values = head.toNonEmptyList.concatNel(tail.toNonEmptyList))
 
-  inline given nestedOne[A, B >: A](using
-      mirror: Mirror.SumOf[A],
-      head: EnumerationValues.Aux[mirror.MirroredElemTypes, B]
-  ): EnumerationValues.Aux[A *: EmptyTuple, B] = EnumerationValues(values = head.toNonEmptyList)
-
-  inline given last[A <: Singleton, B >: A]: EnumerationValues.Aux[A *: EmptyTuple, B] =
+  inline given singleton[A <: Singleton]: EnumerationValues.Aux[A, A] =
     EnumerationValues(values = NonEmptyList.one(valueOf[A]))
+
+  inline given product1[A](using
+      values: EnumerationValues.Aux[A, A]
+  ): EnumerationValues.Aux[A *: EmptyTuple, A *: EmptyTuple] =
+    EnumerationValues(values = values.toNonEmptyList.map(_ *: EmptyTuple))
+
+  inline given productN[A, B <: Tuple](using
+      head: EnumerationValues.Aux[A, A],
+      tail: EnumerationValues.Aux[B, B]
+  ): EnumerationValues.Aux[A *: B, A *: B] =
+    EnumerationValues(values = head.toNonEmptyList.flatMap(head => tail.toNonEmptyList.map(head *: _)))
 
 def valuesOf[A](using values: EnumerationValues.Aux[A, A]): NonEmptyList[A] = values.toNonEmptyList
