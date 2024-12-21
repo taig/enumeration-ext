@@ -12,8 +12,6 @@ inThisBuild(
     dynverVTagPrefix := false,
     homepage := Some(url("https://github.com/taig/enumeration-ext/")),
     licenses := List("MIT" -> url("https://raw.githubusercontent.com/taig/enumeration-ext/main/LICENSE")),
-    organization := "io.taig",
-    organizationHomepage := Some(url("https://taig.io/")),
     versionScheme := Some("early-semver"),
     scalaVersion := Version.Scala
   )
