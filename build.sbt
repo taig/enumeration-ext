@@ -17,6 +17,8 @@ inThisBuild(
   )
 )
 
+noPublishSettings
+
 lazy val root = crossProject(JVMPlatform)
   .in(file("."))
   .enablePlugins(BlowoutYamlPlugin)
