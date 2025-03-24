@@ -1,5 +1,24 @@
 # Changelog
 
+## 0.3.2
+
+_2025-03-24_
+
+- Fix ciris given instance broken inference
+- More modular CI steps
+- Disable root module publishing
+- Upgrade to sbt-houserules 0.11.4
+- Upgrade to sbt-scalajs 1.18.2
+- Upgrade to sbt-blowout 0.2.1
+- Upgrade to sbt-ci-release 1.9.3
+- Upgrade to cats 2.13.0
+- Upgrade to circe 0.14.12
+- Upgrade to munit 1.1.0
+- Upgrade to scala 3.3.5
+- Upgrade to sbt 1.10.11
+- Upgrade to sbt-ci-release 1.9.2
+- Upgrade to sbt-houserules 0.11.0
+
 ## 0.3.1
 
 _2024-12-02_
