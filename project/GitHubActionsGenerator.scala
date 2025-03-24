@@ -9,84 +9,76 @@ object GitHubActionsGenerator {
       "with" := Json.obj(
         "cache" := "sbt",
         "distribution" := "temurin",
-        "java-version" := "17"
+        "java-version" := "21"
       )
+    )
+
+    val SetupSbt: Json = Json.obj(
+      "name" := "Setup sbt",
+      "uses" := "sbt/setup-sbt@v1"
     )
 
     val Checkout: Json = Json.obj(
       "name" := "Checkout",
-      "uses" := "actions/checkout@v4"
+      "uses" := "actions/checkout@v4",
+      "with" := Json.obj(
+        "fetch-depth" := 0
+      )
     )
   }
 
   object Job {
-    val Lint: Json = Json.obj(
-      "name" := "Fatal warnings and code formatting",
+    def apply(name: String, mode: String = "DEV", needs: List[String] = Nil)(steps: Json*): Json = Json.obj(
+      "name" := name,
       "runs-on" := "ubuntu-latest",
-      "steps" := List(
-        Step.Checkout,
-        Step.SetupJava,
-        Json.obj(
-          "name" := "Workflows",
-          "run" := "sbt blowoutCheck"
-        ),
-        Json.obj(
-          "name" := "Code formatting",
-          "run" := "sbt scalafmtCheckAll"
-        ),
-        Json.obj(
-          "name" := "Fatal warnings",
-          "run" := "sbt scalafixAll"
-        )
-      )
+      "env" := Json.obj(
+        s"SBT_TPOLECAT_$mode" := "true"
+      ),
+      "needs" := needs,
+      "steps" := steps
     )
 
-    val Test: Json = Json.obj(
-      "name" := "Unit tests",
-      "runs-on" := "ubuntu-latest",
-      "steps" := List(
-        Step.Checkout,
-        Step.SetupJava,
-        Json.obj(
-          "run" := "sbt test"
-        )
-      )
+    val Blowout: Json =
+      Job(name = "Blowout")(Step.Checkout, Step.SetupJava, Step.SetupSbt, Json.obj("run" := "sbt blowoutCheck"))
+
+    val Scalafmt: Json =
+      Job(name = "Scalafmt")(Step.Checkout, Step.SetupJava, Step.SetupSbt, Json.obj("run" := "sbt scalafmtCheckAll"))
+
+    val Scalafix: Json = Job(name = "Scalafix", mode = "CI")(
+      Step.Checkout,
+      Step.SetupJava,
+      Step.SetupSbt,
+      Json.obj("run" := "sbt scalafixCheckAll")
     )
 
-    val Deploy: Json = Json.obj(
-      "name" := "Deploy",
-      "runs-on" := "ubuntu-latest",
-      "needs" := List("lint", "test"),
-      "steps" := List(
-        Step.Checkout,
-        Step.SetupJava,
-        Json.obj(
-          "name" := "Release",
-          "run" := "sbt ci-release",
-          "env" := Json.obj(
-            "PGP_PASSPHRASE" := "${{secrets.PGP_PASSPHRASE}}",
-            "PGP_SECRET" := "${{secrets.PGP_SECRET}}",
-            "SONATYPE_PASSWORD" := "${{secrets.SONATYPE_PASSWORD}}",
-            "SONATYPE_USERNAME" := "${{secrets.SONATYPE_USERNAME}}"
-          )
+    val Deploy: Json = Job(name = "Deploy", mode = "RELEASE", needs = List("blowout", "scalafmt", "scalafix"))(
+      Step.Checkout,
+      Step.SetupJava,
+      Step.SetupSbt,
+      Json.obj(
+        "name" := "Release",
+        "run" := "sbt ci-release",
+        "env" := Json.obj(
+          "PGP_PASSPHRASE" := "${{secrets.PGP_PASSPHRASE}}",
+          "PGP_SECRET" := "${{secrets.PGP_SECRET}}",
+          "SONATYPE_PASSWORD" := "${{secrets.SONATYPE_PASSWORD}}",
+          "SONATYPE_USERNAME" := "${{secrets.SONATYPE_USERNAME}}"
         )
       )
     )
   }
 
   val main: Json = Json.obj(
-    "name" := "CI & CD",
+    "name" := "CI",
     "on" := Json.obj(
       "push" := Json.obj(
         "branches" := List("main")
       )
     ),
-    "env" := Json.obj(
-      "SBT_TPOLECAT_CI" := "true"
-    ),
     "jobs" := Json.obj(
-      "lint" := Job.Lint,
-      "test" := Job.Test,
+      "blowout" := Job.Blowout,
+      "scalafmt" := Job.Scalafmt,
+      "scalafix" := Job.Scalafix,
       "deploy" := Job.Deploy
     )
   )
@@ -98,12 +90,10 @@ object GitHubActionsGenerator {
         "tags" := List("*.*.*")
       )
     ),
-    "env" := Json.obj(
-      "SBT_TPOLECAT_RELEASE" := "true"
-    ),
     "jobs" := Json.obj(
-      "lint" := Job.Lint,
-      "test" := Job.Test,
+      "blowout" := Job.Blowout,
+      "scalafmt" := Job.Scalafmt,
+      "scalafix" := Job.Scalafix,
       "deploy" := Job.Deploy
     )
   )
@@ -115,12 +105,10 @@ object GitHubActionsGenerator {
         "branches" := List("main")
       )
     ),
-    "env" := Json.obj(
-      "SBT_TPOLECAT_CI" := "true"
-    ),
     "jobs" := Json.obj(
-      "lint" := Job.Lint,
-      "test" := Job.Test
+      "blowout" := Job.Blowout,
+      "scalafmt" := Job.Scalafmt,
+      "scalafix" := Job.Scalafix
     )
   )
 }

@@ -5,55 +5,89 @@ name: CD
   push:
     tags:
     - '*.*.*'
-env:
-  SBT_TPOLECAT_RELEASE: 'true'
 jobs:
-  lint:
-    name: Fatal warnings and code formatting
+  blowout:
+    name: Blowout
     runs-on: ubuntu-latest
+    env:
+      SBT_TPOLECAT_DEV: 'true'
+    needs: []
     steps:
     - name: Checkout
       uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
     - name: Setup Java JDK
       uses: actions/setup-java@v4
       with:
         cache: sbt
         distribution: temurin
-        java-version: '17'
-    - name: Workflows
-      run: sbt blowoutCheck
-    - name: Code formatting
-      run: sbt scalafmtCheckAll
-    - name: Fatal warnings
-      run: sbt scalafixAll
-  test:
-    name: Unit tests
+        java-version: '21'
+    - name: Setup sbt
+      uses: sbt/setup-sbt@v1
+    - run: sbt blowoutCheck
+  scalafmt:
+    name: Scalafmt
     runs-on: ubuntu-latest
+    env:
+      SBT_TPOLECAT_DEV: 'true'
+    needs: []
     steps:
     - name: Checkout
       uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
     - name: Setup Java JDK
       uses: actions/setup-java@v4
       with:
         cache: sbt
         distribution: temurin
-        java-version: '17'
-    - run: sbt test
+        java-version: '21'
+    - name: Setup sbt
+      uses: sbt/setup-sbt@v1
+    - run: sbt scalafmtCheckAll
+  scalafix:
+    name: Scalafix
+    runs-on: ubuntu-latest
+    env:
+      SBT_TPOLECAT_CI: 'true'
+    needs: []
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+    - name: Setup Java JDK
+      uses: actions/setup-java@v4
+      with:
+        cache: sbt
+        distribution: temurin
+        java-version: '21'
+    - name: Setup sbt
+      uses: sbt/setup-sbt@v1
+    - run: sbt scalafixCheckAll
   deploy:
     name: Deploy
     runs-on: ubuntu-latest
+    env:
+      SBT_TPOLECAT_RELEASE: 'true'
     needs:
-    - lint
-    - test
+    - blowout
+    - scalafmt
+    - scalafix
     steps:
     - name: Checkout
       uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
     - name: Setup Java JDK
       uses: actions/setup-java@v4
       with:
         cache: sbt
         distribution: temurin
-        java-version: '17'
+        java-version: '21'
+    - name: Setup sbt
+      uses: sbt/setup-sbt@v1
     - name: Release
       run: sbt ci-release
       env:
