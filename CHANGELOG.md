@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.4.0
+
+_2025-06-20_
+
+- conficDecoder -> configDecoder
+- Upgrade to sbt 1.11.2
+- Upgrade to sbt-houserules 0.11.5
+- Upgrade to sbt-ci-release 1.11.1
+- Upgrade to scala 3.3.6
+- Upgrade to munit 1.1.1
+- Upgrade to circe 0.14.14
+
 ## 0.3.2
 
 _2025-03-24_
