@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.5.0
+
+_2025-09-28_
+
+- Add circe instances for `KeyEncoder` and `KeyDecoder`
+- Upgrade to munit 1.2.0
+- Upgrade to ciris 3.11.0
+- Upgrade to sbt-scalajs 1.20.1
+- Upgrade to sbt-houserules 0.11.6
+- Upgrade to sbt-ci-release 1.11.2
+- Upgrade to sbt 1.11.6
+
 ## 0.4.0
 
 _2025-06-20_
