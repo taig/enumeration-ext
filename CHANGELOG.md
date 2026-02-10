@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.6.0
+
+_2026-02-10_
+
+- Add imapA and imapB methods
+- Upgrade to circe 0.14.15
+- Upgrade to ciris 3.12.0
+- Upgrade to munit 1.2.2
+- Upgrade to sbt 1.12.2
+- Upgrade to sbt-houserules 0.11.10
+- Upgrade to sbt-scalajs 1.20.2
+
 ## 0.5.0
 
 _2025-09-28_

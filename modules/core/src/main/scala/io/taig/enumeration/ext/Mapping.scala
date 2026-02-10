@@ -2,13 +2,13 @@ package io.taig.enumeration.ext
 
 import cats.Eq
 import cats.Inject
+import cats.Invariant
 import cats.Order
 import cats.data.NonEmptyList
 import cats.data.NonEmptyMap
 import cats.syntax.all.*
 
 import scala.annotation.targetName
-import cats.Invariant
 
 sealed abstract class Mapping[A, B] extends Inject[A, B]:
   self =>
