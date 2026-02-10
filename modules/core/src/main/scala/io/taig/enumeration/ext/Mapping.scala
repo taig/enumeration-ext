@@ -8,16 +8,22 @@ import cats.data.NonEmptyMap
 import cats.syntax.all.*
 
 import scala.annotation.targetName
+import cats.Invariant
 
 sealed abstract class Mapping[A, B] extends Inject[A, B]:
   self =>
 
   def values: NonEmptyList[A]
 
-  final def imap[T](f: A => T)(g: T => A): Mapping[T, B] = new Mapping[T, B]:
-    override def values: NonEmptyList[T] = self.values.map(f)
-    override def inj: T => B = g.andThen(self.inj)
-    override def prj: B => Option[T] = self.prj(_).map(f)
+  final def imap[C, D](fa: A => C, fc: C => A)(fb: B => D, fd: D => B): Mapping[C, D] =
+    new Mapping[C, D]:
+      override def values: NonEmptyList[C] = self.values.map(fa)
+      override def inj: C => D = fc.andThen(self.inj).andThen(fb)
+      override def prj: D => Option[C] = d => self.prj(fd(d)).map(fa)
+
+  final def imapA[C](f: A => C)(g: C => A): Mapping[C, B] = imap(f, g)(identity, identity)
+
+  final def imapB[D](f: B => D)(g: D => B): Mapping[A, D] = imap(identity, identity)(f, g)
 
   final def product[C](mapping: Mapping[C, B])(
       merge: (B, B) => B,
@@ -52,3 +58,9 @@ object Mapping:
 
   @targetName("constantOf")
   def constant[A: Eq](value: A & Singleton): Mapping[value.type, A] = constant[value.type, A]
+
+  def invariantA[A]: Invariant[Mapping[*, A]] = new Invariant[Mapping[*, A]]:
+    override def imap[B, C](fa: Mapping[B, A])(f: B => C)(g: C => B): Mapping[C, A] = fa.imapA(f)(g)
+
+  given invariantB[A]: Invariant[Mapping[A, *]] with
+    override def imap[B, C](fa: Mapping[A, B])(f: B => C)(g: C => B): Mapping[A, C] = fa.imapB(f)(g)
