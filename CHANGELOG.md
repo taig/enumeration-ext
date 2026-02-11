@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.7.0
+
+_2026-02-11_
+
+- Rename library to mapping: The focus of this small utility has long shifted from the former `EnumerationValues` to the `Mapping` typeclass
+- Replace `EnumerationValues` with `SingletonValues`, pure macro implementation
+
 ## 0.6.0
 
 _2026-02-10_
