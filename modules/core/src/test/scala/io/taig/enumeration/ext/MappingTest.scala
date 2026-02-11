@@ -2,25 +2,26 @@ package io.taig.enumeration.ext
 
 import munit.FunSuite
 
+enum Fruit:
+  case Apple
+  case Banana
+  case Cherry
+
+object Fruit:
+  val mapping: Mapping[Fruit, String] = Mapping.of:
+    case Fruit.Apple  => "Apple"
+    case Fruit.Banana => "Banana"
+    case Fruit.Cherry => "Cherry"
+
 final class MappingTest extends FunSuite:
   test("enumeration"):
-    enum Animal:
-      case Bird
-      case Cat
-      case Dog
-
-    val mapping: Mapping[Animal, String] = Mapping.enumeration:
-      case Animal.Bird => "Bird"
-      case Animal.Cat  => "Cat"
-      case Animal.Dog  => "Dog"
-
-    assertEquals(obtained = mapping.inj(Animal.Bird), expected = "Bird")
-    assertEquals(obtained = mapping.inj(Animal.Cat), expected = "Cat")
-    assertEquals(obtained = mapping.inj(Animal.Dog), expected = "Dog")
-    assertEquals(obtained = mapping.prj("Bird"), expected = Some(Animal.Bird))
-    assertEquals(obtained = mapping.prj("Cat"), expected = Some(Animal.Cat))
-    assertEquals(obtained = mapping.prj("Dog"), expected = Some(Animal.Dog))
-    assertEquals(obtained = mapping.prj("Whale"), expected = None)
+    assertEquals(obtained = Fruit.mapping.inj(Fruit.Apple), expected = "Apple")
+    assertEquals(obtained = Fruit.mapping.inj(Fruit.Banana), expected = "Banana")
+    assertEquals(obtained = Fruit.mapping.inj(Fruit.Cherry), expected = "Cherry")
+    assertEquals(obtained = Fruit.mapping.prj("Apple"), expected = Some(Fruit.Apple))
+    assertEquals(obtained = Fruit.mapping.prj("Banana"), expected = Some(Fruit.Banana))
+    assertEquals(obtained = Fruit.mapping.prj("Cherry"), expected = Some(Fruit.Cherry))
+    assertEquals(obtained = Fruit.mapping.prj("Pear"), expected = None)
 
   test("enumeration.constant"):
     val mapping = Mapping.constant[String]("foobar")

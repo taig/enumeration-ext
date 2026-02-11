@@ -8,20 +8,20 @@ import io.taig.enumeration.ext.circe.*
 import io.taig.enumeration.ext.circe.given
 import munit.FunSuite
 
+enum Animal:
+  case Bird
+  case Cat
+  case Dog
+
+object Animal:
+  val mapping: Animal => String =
+    case Animal.Bird => "bird"
+    case Animal.Cat  => "cat"
+    case Animal.Dog  => "dog"
+
+  given Mapping[Animal, String] = Mapping.of(mapping)
+
 final class CirceTest extends FunSuite:
-  enum Animal:
-    case Bird
-    case Cat
-    case Dog
-
-  object Animal:
-    val mapping: Animal => String =
-      case Animal.Bird => "bird"
-      case Animal.Cat  => "cat"
-      case Animal.Dog  => "dog"
-
-    given Mapping[Animal, String] = Mapping.enumeration(mapping)
-
   test("decodeMapping"):
     assertEquals(obtained = Decoder[Animal].decodeJson(Json.fromString("dog")), expected = Right(Animal.Dog))
     assertEquals(
@@ -29,35 +29,35 @@ final class CirceTest extends FunSuite:
       expected = Left(DecodingFailure("Couldn't decode value 'whale.' Allowed values: 'bird,cat,dog'", List.empty))
     )
 
-  test("decoderEnumeration"):
+  test("decoderOf"):
     assertEquals(
-      obtained = decoderEnumeration(Animal.mapping).decodeJson(Json.fromString("dog")),
+      obtained = decoderOf(Animal.mapping).decodeJson(Json.fromString("dog")),
       expected = Right(Animal.Dog)
     )
     assertEquals(
-      obtained = decoderEnumeration(Animal.mapping).decodeJson(Json.fromString("whale")),
+      obtained = decoderOf(Animal.mapping).decodeJson(Json.fromString("whale")),
       expected = Left(DecodingFailure("Couldn't decode value 'whale.' Allowed values: 'bird,cat,dog'", List.empty))
     )
 
   test("encodeMapping"):
     assertEquals(obtained = Encoder[Animal].apply(Animal.Dog), expected = Json.fromString("dog"))
 
-  test("encoderEnumeration"):
+  test("encoderOf"):
     assertEquals(
-      obtained = encoderEnumeration(Animal.mapping).apply(Animal.Dog),
+      obtained = encoderOf(Animal.mapping).apply(Animal.Dog),
       expected = Json.fromString("dog")
     )
 
-  test("codecEnumeration"):
+  test("codecOf"):
     assertEquals(
-      obtained = codecEnumeration(Animal.mapping).decodeJson(Json.fromString("dog")),
+      obtained = codecOf(Animal.mapping).decodeJson(Json.fromString("dog")),
       expected = Right(Animal.Dog)
     )
     assertEquals(
-      obtained = codecEnumeration(Animal.mapping).decodeJson(Json.fromString("whale")),
+      obtained = codecOf(Animal.mapping).decodeJson(Json.fromString("whale")),
       expected = Left(DecodingFailure("Couldn't decode value 'whale.' Allowed values: 'bird,cat,dog'", List.empty))
     )
     assertEquals(
-      obtained = codecEnumeration(Animal.mapping).apply(Animal.Dog),
+      obtained = codecOf(Animal.mapping).apply(Animal.Dog),
       expected = Json.fromString("dog")
     )

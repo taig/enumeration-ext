@@ -3,7 +3,7 @@ val Version = new {
   val Circe = "0.14.15"
   val Ciris = "3.12.0"
   val Munit = "1.2.2"
-  val Scala = "3.3.6"
+  val Scala = "3.3.7"
 }
 
 inThisBuild(

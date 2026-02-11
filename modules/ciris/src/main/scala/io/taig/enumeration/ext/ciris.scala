@@ -11,9 +11,10 @@ trait ciris:
   )(using decoder: ConfigDecoder[A, C]): ConfigDecoder[A, B] =
     ConfigDecoder[A, C].mapOption(typeName = mapping.values.map(mapping.inj).map(_.show).mkString_("|"))(mapping.prj)
 
-  def decoderEnumeration[A, B, C: Order: Show](
+  def decoderOf[A, B, C: Order: Show](
       f: B => C
-  )(using EnumerationValues.Aux[B, B])(using decoder: ConfigDecoder[A, C]): ConfigDecoder[A, B] =
-    configDecoder(using Mapping.enumeration(f))
+  )(using decoder: ConfigDecoder[A, C], sv: SingletonValues[B]): ConfigDecoder[A, B] = configDecoder(using
+    Mapping.of(f)
+  )
 
 object ciris extends ciris
