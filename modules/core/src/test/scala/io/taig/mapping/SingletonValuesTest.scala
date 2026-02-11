@@ -1,6 +1,7 @@
-package io.taig.enumeration.ext
+package io.taig.mapping
 
 import cats.data.NonEmptyList
+import io.taig.mapping.singletonValues
 import munit.FunSuite
 
 // Classes must be defined at the root level to avoid macro expansion bug

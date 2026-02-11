@@ -1,11 +1,11 @@
-package io.taig.enumeration.ext
+package io.taig.mapping
 
 import io.circe.Decoder
 import io.circe.DecodingFailure
 import io.circe.Encoder
 import io.circe.Json
-import io.taig.enumeration.ext.circe.*
-import io.taig.enumeration.ext.circe.given
+import io.taig.mapping.circe.*
+import io.taig.mapping.circe.given
 import munit.FunSuite
 
 enum Animal:

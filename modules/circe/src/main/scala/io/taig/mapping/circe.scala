@@ -1,4 +1,4 @@
-package io.taig.enumeration.ext
+package io.taig.mapping
 
 import cats.Order
 import cats.Show

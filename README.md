@@ -1,40 +1,40 @@
-# enumeration ext
+# Mapping
 
-> Derive enumeration values and codecs for enums and nested sealed class/trait hierarchies
+> An extension of cats.Inject built on top of singleton structure derivation
 
 ## Installation
 
 ```sbt
 libraryDependencies ++=
-  "io.taig" %% "enumeration-ext-core" % "x.y.z" ::
-  "io.taig" %% "enumeration-ext-circe" % "x.y.z" ::
-  "io.taig" %% "enumeration-ext-skunk" % "x.y.z" ::
+  "io.taig" %% "mapping-core" % "x.y.z" ::
+  "io.taig" %% "mapping-circe" % "x.y.z" ::
+  "io.taig" %% "mapping-skunk" % "x.y.z" ::
   Nil
 ```
 
 ## Usage
 
 ```scala
-import io.taig.enumeration.ext.*
+import io.taig.mapping.*
 
 enum Animal:
   case Bird
   case Cat
   case Dog
 
-valuesOf[Animal]
-// > List(Bird, Cat, Dog)
+singletonValues[Animal]
+// > NonEmptyList(Bird, Cat, Dog)
 
-given mapping: Mapping[Animal, String] = Mapping.enumeration:
+given mapping: Mapping[Animal, String] = Mapping.of:
   case Animal.Bird => "bird"
   case Animal.Cat => "cat"
   case Animal.Dog => "dog"
 
 mapping.values
-// > List(Bird, Cat, Dog)
+// > NonEmptyList(Bird, Cat, Dog)
 
 mapping.values.map(mapping.inj)
-// > List(bird, cat, dog)
+// > NonEmptyList(bird, cat, dog)
 
 mapping.inj(Animal.Dog)
 // > "dog"
@@ -50,7 +50,7 @@ mapping.prj("whale")
 
 ```scala
 import io.circe.{Decoder, Encoder}
-import io.taig.enumeration.ext.circe.*
+import io.taig.mapping.circe.*
 
 Decoder[Animal].decodeJson(Json.fromString("dog"))
 // > Right(Dog)
@@ -62,12 +62,12 @@ Encoder[Animal].apply(Animal.Dog)
 // > "dog"
 ```
 
-### Skunk
+### Ciris
 
 ```scala
 import skunk.Codec
 import skunk.data.Type
-import io.taig.enumeration.ext.skunk.*
+import io.taig.mapping.ciris.*
 
-val animal: Codec[Animal] = enumeration[Animal](Type("animal"))
+summon[ConfigDecoder[String, Animal]]
 ```

@@ -1,5 +1,6 @@
-package io.taig.enumeration.ext
+package io.taig.mapping
 
+import io.taig.mapping.Mapping
 import munit.FunSuite
 
 enum Fruit:

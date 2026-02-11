@@ -1,4 +1,4 @@
-package io.taig.enumeration.ext
+package io.taig.mapping
 
 import cats.Eq
 import cats.Inject
@@ -7,6 +7,7 @@ import cats.Order
 import cats.data.NonEmptyList
 import cats.data.NonEmptyMap
 import cats.syntax.all.*
+import io.taig.mapping.SingletonValues
 
 import scala.annotation.targetName
 
